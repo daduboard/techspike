@@ -7,10 +7,8 @@ import org.skife.jdbi.v2.DBI;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -21,6 +19,8 @@ import java.util.stream.Collectors;
 /**
  * Created by swzhou on 15/6/3.
  */
+@Path("/gambling")
+@Produces(MediaType.APPLICATION_JSON)
 public class GamblingResource {
     private final GamblingDao gamblingDao;
     private Validator validator;
