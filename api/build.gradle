@@ -1,0 +1,73 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.0'
+    }
+}
+
+apply plugin: 'maven'
+apply plugin: 'java'
+apply plugin: 'application'
+apply plugin: 'idea'
+apply plugin: 'com.github.johnrengelman.shadow'
+
+project.ext {
+    dropwizardVersion = '0.8.1'
+}
+
+mainClassName = 'com.daduboard.api.DaDuApplication'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // dropwizard
+    compile(
+            'io.dropwizard:dropwizard-core:' + dropwizardVersion,
+            'io.dropwizard:dropwizard-hibernate:' + dropwizardVersion,
+            'io.dropwizard:dropwizard-migrations:' + dropwizardVersion,
+            'io.dropwizard:dropwizard-auth:' + dropwizardVersion,
+            'io.dropwizard:dropwizard-client:' + dropwizardVersion,
+            'io.dropwizard:dropwizard-jdbi:' + dropwizardVersion,
+            'io.dropwizard:dropwizard-views-mustache:' + dropwizardVersion,
+            'io.dropwizard:dropwizard-assets:' + dropwizardVersion,
+            'mysql:mysql-connector-java:5.1.6'
+    )
+
+    // test
+    testCompile(
+            'junit:junit:4.11'
+    )
+    compile 'io.dropwizard:dropwizard-testing:' + dropwizardVersion
+
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.2'
+}
+
+// Configure the shadow jar task
+shadowJar {
+    mergeServiceFiles()
+    exclude 'META-INF/*.DSA'
+    exclude 'META-INF/*.RSA'
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': mainClassName
+    }
+}
+
+run {
+    args 'server', './config.yml'
+}
+
+task migrate(dependsOn:'compileJava', type: JavaExec) {
+    main = mainClassName
+    classpath = sourceSets.main.runtimeClasspath
+    args = ['db', 'migrate', './config.yml']
+}
