@@ -4,7 +4,6 @@ import com.codahale.metrics.annotation.Timed;
 import com.daduboard.api.dao.GamblingDao;
 import com.daduboard.api.representations.Gambling;
 import com.google.inject.Inject;
-import io.dropwizard.auth.Auth;
 import org.skife.jdbi.v2.DBI;
 
 import javax.validation.ConstraintViolation;

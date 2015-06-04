@@ -11,7 +11,7 @@ import javax.validation.Validator;
 /**
  * Created by swzhou on 15/6/4.
  */
-public class DaduModule extends AbstractModule{
+public class DaduModule extends AbstractModule {
     @Override
     protected void configure() {
 
