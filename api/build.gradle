@@ -34,6 +34,7 @@ dependencies {
             'io.dropwizard:dropwizard-jdbi:' + dropwizardVersion,
             'io.dropwizard:dropwizard-views-mustache:' + dropwizardVersion,
             'io.dropwizard:dropwizard-assets:' + dropwizardVersion,
+            'com.hubspot.dropwizard:dropwizard-guice:0.8.1.1',
             'mysql:mysql-connector-java:5.1.6'
     )
 

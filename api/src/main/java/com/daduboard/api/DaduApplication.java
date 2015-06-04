@@ -1,6 +1,7 @@
 package com.daduboard.api;
 
 import com.daduboard.api.resources.GamblingResource;
+import com.hubspot.dropwizard.guice.GuiceBundle;
 import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.db.DataSourceFactory;
@@ -26,9 +27,6 @@ public class DaduApplication extends Application<DaduConfiguration> {
     @Override
     public void run(DaduConfiguration configuration, Environment environment) throws Exception {
         LOGGER.info("start running dadu application");
-        final DBIFactory factory = new DBIFactory();
-        final DBI jdbi = factory.build(environment, configuration.getDatabase(), "mysql");
-        environment.jersey().register(new GamblingResource(jdbi, environment.getValidator()));
     }
 
     @Override
@@ -41,5 +39,11 @@ public class DaduApplication extends Application<DaduConfiguration> {
                 return configuration.getDatabase();
             }
         });
+        GuiceBundle<DaduConfiguration> guiceBundle = GuiceBundle.<DaduConfiguration>newBuilder()
+                .addModule(new DaduModule())
+                .enableAutoConfig(getClass().getPackage().getName())
+                .setConfigClass(DaduConfiguration.class)
+                .build();
+        bootstrap.addBundle(guiceBundle);
     }
 }

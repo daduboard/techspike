@@ -1,7 +1,9 @@
 package com.daduboard.api.resources;
 
+import com.codahale.metrics.annotation.Timed;
 import com.daduboard.api.dao.GamblingDao;
 import com.daduboard.api.representations.Gambling;
+import com.google.inject.Inject;
 import io.dropwizard.auth.Auth;
 import org.skife.jdbi.v2.DBI;
 
@@ -23,14 +25,16 @@ import java.util.stream.Collectors;
 @Produces(MediaType.APPLICATION_JSON)
 public class GamblingResource {
     private final GamblingDao gamblingDao;
-    private Validator validator;
+    private final Validator validator;
 
+    @Inject
     public GamblingResource(DBI jdbi, Validator validator) {
         this.validator = validator;
         this.gamblingDao = jdbi.onDemand(GamblingDao.class);
     }
 
     @GET
+    @Timed
     @Path("/{id}")
     public Response getContact(@PathParam("id") int id) {
         Gambling gambling = gamblingDao.getGamblingById(id);
@@ -38,6 +42,7 @@ public class GamblingResource {
     }
 
     @POST
+    @Timed
     public Response createContact(Gambling gambling) throws URISyntaxException {
         return validateAndReturn(gambling, () -> {
             int newGamblingId = gamblingDao.createGambling(gambling.getTitle(),
