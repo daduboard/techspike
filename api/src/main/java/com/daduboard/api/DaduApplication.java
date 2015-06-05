@@ -53,7 +53,7 @@ public class DaduApplication extends Application<DaduConfiguration> {
             }
         });
         GuiceBundle<DaduConfiguration> guiceBundle = GuiceBundle.<DaduConfiguration>newBuilder()
-                .addModule(new DaduModule())
+                .addModule(new DaduModule(bootstrap))
                 .enableAutoConfig(getClass().getPackage().getName())
                 .setConfigClass(DaduConfiguration.class)
                 .build();

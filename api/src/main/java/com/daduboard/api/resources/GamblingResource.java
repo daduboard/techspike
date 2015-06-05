@@ -1,10 +1,12 @@
 package com.daduboard.api.resources;
 
 import com.codahale.metrics.annotation.Timed;
-import com.daduboard.api.dao.GamblingDao;
-import com.daduboard.api.representations.Gambling;
+import com.daduboard.api.db.GamblingDAO;
+import com.daduboard.api.core.Gambling;
+import com.google.common.base.Optional;
 import com.google.inject.Inject;
-import org.skife.jdbi.v2.DBI;
+import io.dropwizard.hibernate.UnitOfWork;
+import io.dropwizard.jersey.params.LongParam;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
@@ -23,29 +25,32 @@ import java.util.stream.Collectors;
 @Path("/gambling")
 @Produces(MediaType.APPLICATION_JSON)
 public class GamblingResource {
-    private final GamblingDao gamblingDao;
+    private final GamblingDAO gamblingDao;
     private final Validator validator;
 
     @Inject
-    public GamblingResource(DBI jdbi, Validator validator) {
+    public GamblingResource(GamblingDAO dao, Validator validator) {
         this.validator = validator;
-        this.gamblingDao = jdbi.onDemand(GamblingDao.class);
+        this.gamblingDao = dao;
     }
 
     @GET
     @Timed
+    @UnitOfWork
     @Path("/{id}")
-    public Response getContact(@PathParam("id") int id) {
-        Gambling gambling = gamblingDao.getGamblingById(id);
-        return Response.ok(gambling).build();
+    public Response getGambling(@PathParam("id") LongParam id) {
+        final Optional<Gambling> gambling = gamblingDao.findById(id.get());
+        return gambling.isPresent()
+                ? Response.ok(gambling.get()).build()
+                : Response.status(Response.Status.NOT_FOUND).build();
     }
 
     @POST
     @Timed
-    public Response createContact(Gambling gambling) throws URISyntaxException {
+    @UnitOfWork
+    public Response createGambling(Gambling gambling) throws URISyntaxException {
         return validateAndReturn(gambling, () -> {
-            int newGamblingId = gamblingDao.createGambling(gambling.getTitle(),
-                    gambling.getDescription());
+            long newGamblingId = gamblingDao.create(gambling);
             return Response.created(new URI(String.valueOf(newGamblingId))).build();
         });
     }
