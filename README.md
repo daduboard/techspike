@@ -27,6 +27,6 @@ React ES6 support: http://revelry.co/development/2015/03/02/es6-and-react/
     - nginx or other alternatives?
     - AWS
     - Git via Github
-    - [Snap CI](snap-ci.com)
+    - [Snap CI](snap-ci.com): [Pipeline] (https://snap-ci.com/daduboard/techspike/branch/master)
     - Gulp + Gradle
 - Hosting: coding.net
