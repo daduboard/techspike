@@ -40,7 +40,8 @@ dependencies {
 
     // test
     testCompile(
-            'junit:junit:4.11'
+            'junit:junit:4.11',
+            'org.glassfish.jersey.test-framework.providers:jersey-test-framework-provider-inmemory:2.17'
     )
     compile 'io.dropwizard:dropwizard-testing:' + dropwizardVersion
 

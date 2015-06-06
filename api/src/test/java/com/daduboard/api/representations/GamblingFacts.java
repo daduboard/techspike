@@ -1,5 +1,6 @@
 package com.daduboard.api.representations;
 
+import com.daduboard.api.core.Gambling;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.dropwizard.jackson.Jackson;
 import org.junit.Test;
@@ -15,7 +16,7 @@ public class GamblingFacts {
 
     @Test
     public void should_serialize_to_json() throws Exception {
-        final Gambling gambling = new Gambling(1, "raining", "according to my calculation, it must rain tomorrow");
+        final Gambling gambling = new Gambling("raining", "according to my calculation, it must rain tomorrow");
 
         final String expected = MAPPER.writeValueAsString(MAPPER.readValue(fixture("fixtures/gambling.json"), Gambling.class));
 
@@ -24,7 +25,7 @@ public class GamblingFacts {
 
     @Test
     public void should_deserialize_from_json() throws Exception {
-        final Gambling gambling = new Gambling(1, "raining", "according to my calculation, it must rain tomorrow");
+        final Gambling gambling = new Gambling("raining", "according to my calculation, it must rain tomorrow");
 
         Gambling actualGambling = MAPPER.readValue(fixture("fixtures/gambling.json"), Gambling.class);
         assertThat(actualGambling.getId()).isEqualTo(gambling.getId());
